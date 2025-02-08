@@ -72,7 +72,6 @@ namespace E_Commerce_Simple.Areas.Admin.Controllers
 
                 product.CreatedAt = DateTime.Now;
                 product.UpdatedAt = DateTime.Now;
-                product.Quantity = 1;
                 product.Image = $"/Admin/img/products/{imgName}";
 
                 _context.Add(product);

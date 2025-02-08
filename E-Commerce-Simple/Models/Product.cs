@@ -12,10 +12,9 @@ namespace E_Commerce_Simple.Models
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
 
-        public int Quantity { get; set; }
-
         [Required(ErrorMessage = "Price is required")]
-        [Range(1, double.MaxValue, ErrorMessage = "Quantity must be number.")]
+        [Range(1, double.MaxValue, ErrorMessage = "Price must be number.")]
+        [DataType(DataType.Currency)]
         public double Price { get; set; }
 
         public DateTime CreatedAt { get; set; }

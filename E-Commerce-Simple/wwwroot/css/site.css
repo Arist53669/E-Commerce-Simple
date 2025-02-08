@@ -17,6 +17,30 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+img {
+    vertical-align: middle !important;
+    object-fit: cover !important;
+}
+
+.icon-hover:hover {
+    border-color: #3b71ca !important;
+    background-color: white !important;
+}
+
+.icon-hover:hover i {
+    color: #3b71ca !important;
+}
+
+.product {
+    color: #000;
+}
+
+.product:hover {
+    color: #0d6efd;
+}
+
+.group-btn a:hover {
+    color: #fff !important;
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
 }

@@ -1,0 +1,45 @@
+﻿<div class="p-3 text-center bg-white border-bottom">
+    <div class="container">
+        <div class="row gy-3">
+            <!-- Left elements -->
+            <div class="col-lg-2 col-sm-4 col-4">
+                <a asp-action="Index" asp-controller="Home" asp-area="" target="_blank" class="float-start">
+                    E-Commerce
+                </a>
+            </div>
+            <!-- Left elements -->
+            <!-- Center elements -->
+            <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+                <div class="d-flex float-end group-btn">
+                    <a asp-action="Login" asp-controller="Account" asp-area="Identity" class="text-black me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank">
+                        <i class="fas fa-user-alt m-1 me-md-2"></i>
+                        <p class="d-none d-md-block mb-0">Sign in</p>
+                    </a>
+                    <a asp-action="Index" asp-controller="Home" asp-area="" class="text-black me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank">
+                        <i class="fas fa-heart m-1 me-md-2"></i>
+                        <p class="d-none d-md-block mb-0">Wishlist</p>
+                    </a>
+                    <a asp-action="Index" asp-controller="Cart" asp-area="" class="text-black border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank">
+                        <i class="fas fa-shopping-cart m-1 me-md-2"></i>
+                        <p class="d-none d-md-block mb-0">My cart</p>
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">@ViewBag.TotalCart</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Center elements -->
+            <!-- Right elements -->
+            <div class="col-lg-5 col-md-12 col-12">
+                <div class="d-flex">
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">Search</span>
+                        <input type="search" id="form1" class="form-control rounded-0" />
+                    </div>
+                    <button type="button" class="btn btn-primary shadow-0 rounded-end rounded-0">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Right elements -->
+        </div>
+    </div>
+</div>

@@ -14,7 +14,6 @@
             <tr class="text-dark">
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
-                <th scope="col">Quantity</th>
                 <th scope="col">Image</th>
                 <th scope="col">Price</th>
                 <th scope="col">Created At</th>
@@ -28,11 +27,10 @@
                 <tr>
                     <td>@product.Name</td>
                     <td>@product.Description</td>
-                    <td>@product.Quantity</td>
                     <td>
                         <img src="@product.Image" alt="@product.Name" width="150" height="150" />
                     </td>
-                    <td>$@product.Price</td>
+                    <td>@product.Price.ToString("C")</td>
                     <td>@product.CreatedAt.ToString("MMMM dd, yyyy")</td>
                     <td>@product.UpdatedAt.ToString("MMMM dd, yyyy")</td>
                     <td>
