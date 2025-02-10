@@ -1,18 +1,22 @@
 ﻿using E_Commerce_Simple.Data;
 using E_Commerce_Simple.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Simple.Controllers
 {
-    //[Authorize]
-    public class CartController(ApplicationDbContext context) : Controller
+    [Authorize]
+    public class CartController(ApplicationDbContext context, UserManager<AppUser> userManager) : Controller
     {
         private readonly ApplicationDbContext _context = context;
+        private readonly UserManager<AppUser> _userManager = userManager;
 
         public async Task<IActionResult> Index()
         {
-            List<Cart> cart = await _context.Carts.Include("Product").ToListAsync();
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            List<Cart> cart = await _context.Carts.Where(c => c.UserId == user.Id).Include("Product").ToListAsync();
 
             double totalPrice = 0;
 
@@ -29,6 +33,7 @@ namespace E_Commerce_Simple.Controllers
         public async Task<IActionResult> AddToCart(int productId)
         {
             Product product = await _context.Products.FindAsync(productId);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
 
             if (product == null)
             {
@@ -38,7 +43,8 @@ namespace E_Commerce_Simple.Controllers
             Cart cart = new()
             {
                 ProductId = productId,
-                Quantity = 1
+                Quantity = 1,
+                UserId = user.Id
             };
 
             await _context.Carts.AddAsync(cart);

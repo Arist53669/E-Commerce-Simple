@@ -11,6 +11,14 @@
                 <div class="card border shadow-0">
                     <div class="m-4">
                         <h4 class="card-title mb-4">Your shopping cart</h4>
+
+                        @if (Model.Count <= 0)
+                        {
+                            <div class="mb-4">
+                                <p>Empty</p>
+                            </div>
+                        }
+
                         @foreach (var cartItem in Model)
                         {
                             <div class="row gy-3 mb-4">
@@ -114,7 +122,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <a href="#" class="btn btn-success w-100 shadow-0 mb-2"> Make Purchase </a>
+                            <a asp-action="Index" asp-controller="Checkout" class="btn btn-success w-100 shadow-0 mb-2"> Make Purchase </a>
                             <a asp-action="Index" asp-controller="Home" class="btn btn-light w-100 border mt-2"> Back to shop </a>
                         </div>
                     </div>
