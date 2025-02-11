@@ -72,7 +72,8 @@ namespace E_Commerce_Simple.Controllers
                 OrderItem item = new()
                 {
                     OrderId = order.Id,
-                    ProductId = cartItem.ProductId
+                    ProductId = cartItem.ProductId,
+                    Quantity = cartItem.Quantity
                 };
 
                 await _context.OrderItems.AddAsync(item);

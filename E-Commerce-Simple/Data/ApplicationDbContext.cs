@@ -11,5 +11,15 @@ namespace E_Commerce_Simple.Data
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<OrderItem>()
+                .HasOne(o => o.Order)
+                .WithMany(o => o.OrderItems)
+                .HasForeignKey(o => o.OrderId);
+
+            base.OnModelCreating(builder);
+        }
     }
 }

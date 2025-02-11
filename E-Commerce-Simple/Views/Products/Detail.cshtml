@@ -1,0 +1,195 @@
+﻿@model Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row gx-5">
+            <aside class="col-lg-6">
+                <div class="border rounded-4 mb-3 d-flex justify-content-center">
+                    <div class="rounded-4">
+                        <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="@Model.Image" alt="@Model.Name">
+                    </div>
+                </div>
+                @* <div class="d-flex justify-content-center mb-3">
+                    <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp">
+                        <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp">
+                    </a>
+                    <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big2.webp">
+                        <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big2.webp">
+                    </a>
+                    <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp">
+                        <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp">
+                    </a>
+                    <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp">
+                        <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp">
+                    </a>
+                    <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
+                        <img width="60" height="60" class="rounded-2" src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp">
+                    </a>
+                </div> *@
+                <!-- thumbs-wrap.// -->
+                <!-- gallery-wrap .end// -->
+            </aside>
+            <main class="col-lg-6">
+                <div class="ps-lg-3">
+                    <h4 class="title text-dark">@Model.Name</h4>
+                    @* <div class="d-flex flex-row my-3">
+                        <div class="text-warning mb-1 me-2">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="ms-1">
+                                4.5
+                            </span>
+                        </div>
+                        <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
+                        <span class="text-success ms-2">In stock</span>
+                    </div> *@
+
+                    <div class="mb-3">
+                        <span class="h5">@Model.Price.ToString("C")</span>
+                        <span class="text-muted">/per item</span>
+                    </div>
+
+                    <p>@Model.Description</p>
+
+                    @*  <div class="row">
+                        <dt class="col-3">Type:</dt>
+                        <dd class="col-9">Regular</dd>
+
+                        <dt class="col-3">Color</dt>
+                        <dd class="col-9">Brown</dd>
+
+                        <dt class="col-3">Material</dt>
+                        <dd class="col-9">Cotton, Jeans</dd>
+
+                        <dt class="col-3">Brand</dt>
+                        <dd class="col-9">Reebook</dd>
+                    </div> *@
+
+                    <hr>
+
+                    <div class="row mb-4">
+                        <!-- col.// -->
+                        <div class="mb-3">
+                            <label class="mb-2 d-block">Quantity</label>
+                            <div class="input-group mb-3" style="width: 170px;">
+                                <button class="btn btn-white border border-secondary px-3 btn-minus" disabled type="button" data-mdb-ripple-color="dark">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="text" class="form-control text-center border border-secondary product-qty" value="1" />
+                                <button class="btn btn-white border border-secondary px-3 btn-plus" type="button" data-mdb-ripple-color="dark">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    @* <a asp-action="BuyNow" asp-controller="Checkout" class="btn btn-warning shadow-0"> Buy now </a> *@
+                    <button onclick="addToCart(@Model.Id)" class="btn btn-primary">
+                        <i class="me-1 fa fa-shopping-basket"></i>
+                        Add to cart
+                    </button>
+                </div>
+            </main>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $('.product-qty').on('input', function() {
+        // Remove any decimal point and following numbers
+            const val = $(this).val();
+
+            if (val.indexOf('.') !== -1) {
+                $(this).val(parseInt(val));
+            }
+
+            const newValue = val.replace(/[^0-9]/g, '');
+            $(this).val(newValue);
+
+            if (val >= 10) {
+                $(this).val(10);
+                $(".btn-minus").prop("disabled", false);
+                $(".btn-plus").prop("disabled", true);
+            }
+
+            if (val <= 1) {
+                $(this).val(1);
+                $(".btn-minus").prop("disabled", true);
+                $(".btn-plus").prop("disabled", false);
+            }
+        });
+
+        $(".btn-plus").click(function() {
+            let qty = $(".product-qty").val();
+            qty++;
+            $(".product-qty").val(qty);
+
+            if (qty > 1 && qty < 10) {
+                $(".btn-minus").prop("disabled", false);
+                $(".btn-plus").prop("disabled", false);
+            }
+
+            if (qty <= 1) {
+                $(".btn-minus").prop("disabled", true);
+                $(".btn-plus").prop("disabled", false);
+            }
+
+            if (qty >= 10) {
+                $(".btn-minus").prop("disabled", false);
+                $(".btn-plus").prop("disabled", true);
+            }
+        });
+
+        $(".btn-minus").click(function() {
+            let qty = $(".product-qty").val();
+            qty--;
+            $(".product-qty").val(qty);
+
+            if (qty > 1 && qty < 10) {
+                $(".btn-minus").prop("disabled", false);
+                $(".btn-plus").prop("disabled", false);
+            }
+
+            if (qty <= 1) {
+                $(".btn-minus").prop("disabled", true);
+                $(".btn-plus").prop("disabled", false);
+            }
+
+            if (qty >= 10) {
+                $(".btn-minus").prop("disabled", false);
+                $(".btn-plus").prop("disabled", true);
+            }
+        });
+        
+        function addToCart(productId) {
+            const qty = $('.product-qty').val();
+            const form = document.createElement('form');
+
+            form.method = 'GET';
+            form.action = '/Cart/AddToCart';
+
+            const productInput = document.createElement('input');
+            productInput.type = 'hidden';
+            productInput.name = 'productId';
+            productInput.value = productId;
+
+            const qtyInput = document.createElement('input');
+            qtyInput.type = 'hidden';
+            qtyInput.name = 'qty';
+            qtyInput.value = qty;
+
+            form.appendChild(productInput);
+            form.appendChild(qtyInput);
+
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+    </script>
+}

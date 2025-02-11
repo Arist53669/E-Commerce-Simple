@@ -30,7 +30,7 @@ namespace E_Commerce_Simple.Controllers
             return View(cart);
         }
 
-        public async Task<IActionResult> AddToCart(int productId)
+        public async Task<IActionResult> AddToCart(int productId, int qty)
         {
             Product product = await _context.Products.FindAsync(productId);
             var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -43,7 +43,7 @@ namespace E_Commerce_Simple.Controllers
             Cart cart = new()
             {
                 ProductId = productId,
-                Quantity = 1,
+                Quantity = qty,
                 UserId = user.Id
             };
 
