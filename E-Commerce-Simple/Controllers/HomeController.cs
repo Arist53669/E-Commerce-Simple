@@ -13,7 +13,7 @@ namespace E_Commerce_Simple.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Products.OrderByDescending(p => p.UpdatedAt).ToListAsync());
+            return View(await _context.Products.OrderByDescending(p => p.UpdatedAt).Take(4).ToListAsync());
         }
 
         public IActionResult Privacy()

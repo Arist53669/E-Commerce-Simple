@@ -3,7 +3,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h3>Products</h3>
+<h3>New products</h3>
 
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-3">
     @foreach (var product in Model)
@@ -28,4 +28,8 @@
             </div>
         </div>
     }
+</div>
+
+<div>
+    <a asp-action="Index" asp-controller="Products">View all</a>
 </div>

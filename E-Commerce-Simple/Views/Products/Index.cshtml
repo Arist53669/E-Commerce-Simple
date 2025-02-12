@@ -1,4 +1,4 @@
-﻿@model List<Product>
+﻿@model ProductCategoryViewModel
 @{
     ViewData["Title"] = "Products";
 }
@@ -16,168 +16,29 @@
                 <div class="collapse card d-lg-block mb-5" id="navbarSupportedContent">
                     <div class="accordion" id="accordionPanelsStayOpenExample">
                         <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button text-dark bg-light" type="button" data-mdb-toggle="collapse" data-mdb-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                                    Related items
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-                                <div class="accordion-body">
-                                    <ul class="list-unstyled">
-                                        <li><a href="#" class="text-dark">Electronics </a></li>
-                                        <li><a href="#" class="text-dark">Home items </a></li>
-                                        <li><a href="#" class="text-dark">Books, Magazines </a></li>
-                                        <li><a href="#" class="text-dark">Men's clothing </a></li>
-                                        <li><a href="#" class="text-dark">Interiors items </a></li>
-                                        <li><a href="#" class="text-dark">Underwears </a></li>
-                                        <li><a href="#" class="text-dark">Shoes for men </a></li>
-                                        <li><a href="#" class="text-dark">Accessories </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
                             <h2 class="accordion-header" id="headingTwo">
                                 <button class="accordion-button text-dark bg-light" type="button" data-mdb-toggle="collapse" data-mdb-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
-                                    Brands
+                                    Categories
                                 </button>
                             </h2>
                             <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                                 <div class="accordion-body">
+                                    @{
+                                        string categoryId = Context.Request.Query["categoryId"].ToString();
+                                    }
                                     <div>
-                                        <!-- Checked checkbox -->
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked1" checked="">
-                                            <label class="form-check-label" for="flexCheckChecked1">Mercedes</label>
-                                            <span class="badge badge-secondary float-end">120</span>
+                                            <input class="form-check-input" checked="@(categoryId is null)" type="radio" id="all" onchange="onCheckCategory()">
+                                            <label class="form-check-label" for="all">All</label>
                                         </div>
-                                        <!-- Checked checkbox -->
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked="">
-                                            <label class="form-check-label" for="flexCheckChecked2">Toyota</label>
-                                            <span class="badge badge-secondary float-end">15</span>
-                                        </div>
-                                        <!-- Checked checkbox -->
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked3" checked="">
-                                            <label class="form-check-label" for="flexCheckChecked3">Mitsubishi</label>
-                                            <span class="badge badge-secondary float-end">35</span>
-                                        </div>
-                                        <!-- Checked checkbox -->
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked4" checked="">
-                                            <label class="form-check-label" for="flexCheckChecked4">Nissan</label>
-                                            <span class="badge badge-secondary float-end">89</span>
-                                        </div>
-                                        <!-- Default checkbox -->
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                            <label class="form-check-label" for="flexCheckDefault">Honda</label>
-                                            <span class="badge badge-secondary float-end">30</span>
-                                        </div>
-                                        <!-- Default checkbox -->
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                            <label class="form-check-label" for="flexCheckDefault">Suzuki</label>
-                                            <span class="badge badge-secondary float-end">30</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button text-dark bg-light" type="button" data-mdb-toggle="collapse" data-mdb-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
-                                    Price
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
-                                <div class="accordion-body">
-                                    <div class="range">
-                                        <input type="range" class="form-range" id="customRange1">
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-6">
-                                            <p class="mb-0">
-                                                Min
-                                            </p>
-                                            <div class="form-outline">
-                                                <input type="number" id="typeNumber" class="form-control">
-                                                <label class="form-label" for="typeNumber">$0</label>
+                                        @foreach (var category in Model.Categories)
+                                        {
+                                            <div class="form-check">
+                                                <input class="form-check-input" checked="@(categoryId == category.Id.ToString())" type="radio" id="@category.Id" onchange="onCheckCategory(@category.Id)">
+                                                <label class="form-check-label" for="@category.Id">@category.Name</label>
+                                                <span class="badge badge-secondary float-end">@category.Products.Count()</span>
                                             </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="mb-0">
-                                                Max
-                                            </p>
-                                            <div class="form-outline">
-                                                <input type="number" id="typeNumber" class="form-control">
-                                                <label class="form-label" for="typeNumber">$1,0000</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-white w-100 border border-secondary">apply</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button text-dark bg-light" type="button" data-mdb-toggle="collapse" data-mdb-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
-                                    Size
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingThree">
-                                <div class="accordion-body">
-                                    <input type="checkbox" class="btn-check border justify-content-center" id="btn-check1" checked="" autocomplete="off">
-                                    <label class="btn btn-white mb-1 px-1" style="width: 60px;" for="btn-check1">XS</label>
-                                    <input type="checkbox" class="btn-check border justify-content-center" id="btn-check2" checked="" autocomplete="off">
-                                    <label class="btn btn-white mb-1 px-1" style="width: 60px;" for="btn-check2">SM</label>
-                                    <input type="checkbox" class="btn-check border justify-content-center" id="btn-check3" checked="" autocomplete="off">
-                                    <label class="btn btn-white mb-1 px-1" style="width: 60px;" for="btn-check3">LG</label>
-                                    <input type="checkbox" class="btn-check border justify-content-center" id="btn-check4" checked="" autocomplete="off">
-                                    <label class="btn btn-white mb-1 px-1" style="width: 60px;" for="btn-check4">XXL</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button text-dark bg-light" type="button" data-mdb-toggle="collapse" data-mdb-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseFive">
-                                    Ratings
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show" aria-labelledby="headingThree">
-                                <div class="accordion-body">
-                                    <!-- Default checkbox -->
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-warning"></i>
-                                        </label>
-                                    </div>
-                                    <!-- Default checkbox -->
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
-                                            <i class="fas fa-star text-secondary"></i>
-                                        </label>
-                                    </div>
-                                    <!-- Default checkbox -->
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-secondary"></i>
-                                            <i class="fas fa-star text-secondary"></i>
-                                        </label>
-                                    </div>
-                                    <!-- Default checkbox -->
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked="">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-secondary"></i><i class="fas fa-star text-secondary"></i>
-                                            <i class="fas fa-star text-secondary"></i>
-                                        </label>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -188,8 +49,8 @@
             <!-- sidebar -->
             <!-- content -->
             <div class="col-lg-9">
-                <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
-                    <strong class="d-block py-2">@Model.Count() Items found </strong>
+                @* <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+                    <strong class="d-block py-2">@Model.Products.Count() Items found </strong>
                     <div class="ms-auto">
                         <select class="form-select d-inline-block w-auto border pt-1">
                             <option value="0">Best match</option>
@@ -206,11 +67,11 @@
                             </a>
                         </div>
                     </div>
-                </header>
+                </header> *@
 
-                @if (Model.Count > 0) 
+                @if (Model.Products.Count() > 0) 
                 {
-                    @foreach (var product in Model)
+                    @foreach (var product in Model.Products)
                     {
                         <div class="row justify-content-center mb-3">
                             <div class="col-md-12">
@@ -274,22 +135,24 @@
                 <hr>
 
                 <!-- Pagination -->
-                <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+                <nav>
                     <ul class="pagination">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">«</span>
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = 1 })">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">Previous</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link disabled" href="#">
+                                Page @ViewBag.CurrentPage of @ViewBag.TotalPages
                             </a>
                         </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
                         <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">»</span>
-                            </a>
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.TotalPages })">Last</a>
                         </li>
                     </ul>
                 </nav>
@@ -298,3 +161,26 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        function onCheckCategory(id) {
+            const form = document.createElement("form");
+
+            form.method = 'GET';
+            form.action = `/Products`;
+
+            if (id) {
+                const categoryInput = document.createElement('input');
+                categoryInput.type = 'hidden';
+                categoryInput.name = 'categoryId';
+                categoryInput.value = id;
+
+                form.appendChild(categoryInput);
+            }
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+    </script>
+}

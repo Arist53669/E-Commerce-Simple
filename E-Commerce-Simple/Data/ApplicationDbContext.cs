@@ -21,5 +21,6 @@ namespace E_Commerce_Simple.Data
 
             base.OnModelCreating(builder);
         }
+        public DbSet<E_Commerce_Simple.Models.Category> Category { get; set; }
     }
 }

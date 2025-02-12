@@ -1,4 +1,4 @@
-﻿@model E_Commerce_Simple.Models.Product
+﻿@model ProductCategoryViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,24 +12,37 @@
     <div class="col-md-4">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div class="mb-4">
-                <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control" />
-                @Html.ValidationMessageFor(p => p.Name, "", new { @class = "text-danger" })
+                <label asp-for="@Model.Product.Name" class="form-label"></label>
+                <input asp-for="@Model.Product.Name" class="form-control" />
+                @Html.ValidationMessageFor(p => p.Product.Name, "", new { @class = "text-danger" })
             </div>
             <div class="mb-4">
-                <label asp-for="Description" class="form-label"></label>
-                <input asp-for="Description" class="form-control" />
-                @Html.ValidationMessageFor(p => p.Description, "", new { @class = "text-danger" })
+                <label asp-for="@Model.Product.Description" class="form-label"></label>
+                <input asp-for="@Model.Product.Description" class="form-control" />
+                @Html.ValidationMessageFor(p => p.Product.Description, "", new { @class = "text-danger" })
             </div>
             <div class="mb-4">
-                <label asp-for="Price" class="form-label"></label>
-                <input asp-for="Price" class="form-control" />
-                @Html.ValidationMessageFor(p => p.Price, "", new { @class = "text-danger" })
+                <label asp-for="@Model.Product.Price" class="form-label"></label>
+                <input asp-for="@Model.Product.Price" class="form-control" />
+                @Html.ValidationMessageFor(p => p.Product.Price, "", new { @class = "text-danger" })
             </div>
             <div class="mb-4">
-                <label asp-for="Image" class="form-label"></label>
+                <label asp-for="@Model.Product.Category" class="form-label"></label>
+                @{
+                    var selectedCategoryId = Model.SelectedCategoryId;
+                    List<SelectListItem> items = Model.Categories.Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name,
+                        Selected = selectedCategoryId == c.Id
+                    }).ToList();
+                }
+                @Html.DropDownListFor(m => m.SelectedCategoryId, items, null, new { @class = "form-control" })
+            </div>
+            <div class="mb-4">
+                <label asp-for="@Model.Product.Image" class="form-label"></label>
                 <input type="file" name="img" class="form-control" />
-                @Html.ValidationMessageFor(p => p.Image, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(p => p.Product.Image, "", new { @class = "text-danger" })
             </div>
 
             <button type="submit" class="btn btn-primary">Update</button>

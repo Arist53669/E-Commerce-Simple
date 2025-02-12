@@ -1,5 +1,6 @@
 ﻿using E_Commerce_Simple.Data;
 using E_Commerce_Simple.Models;
+using E_Commerce_Simple.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,7 @@ namespace E_Commerce_Simple.Areas.Admin.Controllers
         // GET: Admin/Products
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Products.OrderByDescending(p => p.UpdatedAt).ToListAsync());
+            return View(await _context.Products.Include(p => p.Category).OrderByDescending(p => p.UpdatedAt).ToListAsync());
         }
 
         // GET: Admin/Products/Details/5
@@ -25,6 +26,7 @@ namespace E_Commerce_Simple.Areas.Admin.Controllers
             }
 
             var product = await _context.Products
+                .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -35,9 +37,17 @@ namespace E_Commerce_Simple.Areas.Admin.Controllers
         }
 
         // GET: Admin/Products/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var categories = await _context.Category.ToListAsync();
+
+            ProductCategoryViewModel vm = new()
+            {
+                Categories = categories,
+                SelectedCategoryId = categories.First().Id
+            };
+
+            return View(vm);
         }
 
         // POST: Admin/Products/Create
@@ -45,14 +55,14 @@ namespace E_Commerce_Simple.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name, Description, Price")] Product product, IFormFile img)
+        public async Task<IActionResult> Create(ProductCategoryViewModel vm, IFormFile img)
         {
             if (ModelState.IsValid)
             {
                 if (img == null)
                 {
                     ModelState.AddModelError(nameof(Product.Image), "Image is required.");
-                    return View(product);
+                    return View(vm);
                 }
 
                 string imgName = Guid.NewGuid() + Path.GetExtension(img.FileName).ToLower();
@@ -70,16 +80,23 @@ namespace E_Commerce_Simple.Areas.Admin.Controllers
                     await img.CopyToAsync(stream);
                 }
 
-                product.CreatedAt = DateTime.Now;
-                product.UpdatedAt = DateTime.Now;
-                product.Image = $"/Admin/img/products/{imgName}";
+                Product product = new()
+                {
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Image = $"/Admin/img/products/{imgName}",
+                    Name = vm.Product.Name,
+                    Description = vm.Product.Description,
+                    Price = vm.Product.Price,
+                    CategoryId = vm.SelectedCategoryId
+                };
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(product);
+            return View(vm);
         }
 
         // GET: Admin/Products/Edit/5
@@ -95,7 +112,16 @@ namespace E_Commerce_Simple.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+            var categories = await _context.Category.ToListAsync();
+
+            ProductCategoryViewModel vm = new()
+            {
+                Categories = categories,
+                Product = product,
+                SelectedCategoryId = product.CategoryId == null ? categories.First().Id : product.CategoryId
+            };
+
+            return View(vm);
         }
 
         // POST: Admin/Products/Edit/5
@@ -103,61 +129,48 @@ namespace E_Commerce_Simple.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Product product, IFormFile img)
+        public async Task<IActionResult> Edit(int id, ProductCategoryViewModel vm, IFormFile img)
         {
-            if (id != product.Id)
+            Product oldProduct = await _context.Products.FindAsync(id);
+
+            if (oldProduct == null)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                if (img != null)
                 {
-                    Product oldProduct = await _context.Products.FindAsync(id);
+                    string imgName = Guid.NewGuid() + Path.GetExtension(img.FileName).ToLower();
+                    string imgDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Admin/img/products");
 
-                    if (img != null)
+                    if (!Directory.Exists(imgDirectory))
                     {
-                        string imgName = Guid.NewGuid() + Path.GetExtension(img.FileName).ToLower();
-                        string imgDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Admin/img/products");
-
-                        if (!Directory.Exists(imgDirectory))
-                        {
-                            Directory.CreateDirectory(imgDirectory);
-                        }
-
-                        string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Admin/img/products", imgName);
-
-                        await using (FileStream stream = new(savePath, FileMode.Create))
-                        {
-                            await img.CopyToAsync(stream);
-                        }
-
-                        oldProduct.Image = $"/Admin/img/products/{imgName}";
+                        Directory.CreateDirectory(imgDirectory);
                     }
 
-                    oldProduct.Name = product.Name;
-                    oldProduct.Description = product.Description;
-                    oldProduct.Price = product.Price;
-                    oldProduct.UpdatedAt = DateTime.Now;
+                    string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Admin/img/products", imgName);
 
-                    _context.Update(oldProduct);
-                    await _context.SaveChangesAsync();
+                    await using (FileStream stream = new(savePath, FileMode.Create))
+                    {
+                        await img.CopyToAsync(stream);
+                    }
+
+                    oldProduct.Image = $"/Admin/img/products/{imgName}";
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+                oldProduct.Name = vm.Product.Name;
+                oldProduct.Description = vm.Product.Description;
+                oldProduct.Price = vm.Product.Price;
+                oldProduct.CategoryId = vm.SelectedCategoryId;
+                oldProduct.UpdatedAt = DateTime.Now;
+
+                _context.Update(oldProduct);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(vm);
         }
 
         // GET: Admin/Products/Delete/5
